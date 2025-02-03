@@ -72,9 +72,9 @@ class CustomerController extends Controller
                 'email' => 'required|email|unique:customers',
                 'city' => 'required|string',
                 'country' =>  'required|string',
-                'id_card' => 'nullable|string',
-                'voters_card' => 'nullable|string',
-                'drivers_license' => 'nullable|string'
+                'id_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'voters_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'drivers_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
     
             $customer = Customer::create($validated);
