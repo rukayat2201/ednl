@@ -77,6 +77,13 @@ class CustomerController extends Controller
                 'drivers_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
     
+            $files = ['id_card', 'voters_card', 'drivers_license'];
+            foreach ($files as $file) {
+                if ($request->hasFile($file)) {
+                    $validated[$file] = $request->file($file)->store('uploads', 'public');
+                }
+            }
+
             $customer = Customer::create($validated);
                
             DB::commit();
@@ -112,12 +119,12 @@ class CustomerController extends Controller
                 'bank_code' => 'required|string',
                 'accountnumber' => 'required|string|min:10,max:10',
                 'company_id' => 'required|string',
-                'email' => 'required|email|unique:customers,email,' . $customer_id,
+                'email' => 'required|email|unique:customers,email,',
                 'city' => 'required|string',
                 'country' => 'required|string',
-                'id_card' => 'nullable|string',
-                'voters_card' => 'nullable|string',
-                'drivers_license' => 'nullable|string'
+                'id_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'voters_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'drivers_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
             
             $customer = Customer::findOrFail($customer_id);
