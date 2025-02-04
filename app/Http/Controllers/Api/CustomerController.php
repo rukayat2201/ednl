@@ -125,28 +125,18 @@ class CustomerController extends Controller
                 'id_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
                 'voters_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
                 'drivers_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'status' => 'required|string'
             ]);
             
             $customer = Customer::findOrFail($customer_id);
 
-            if ($request->hasFile('id_card')) {
-                $idCard = $request->file('id_card');
-                $idCardPath = $idCard->store('public/uploads');
-                $validated['id_card'] = $idCardPath;
+            $files = ['id_card', 'voters_card', 'drivers_license'];
+            foreach ($files as $file) {
+                if ($request->hasFile($file)) {
+                    $validated[$file] = $request->file($file)->store('uploads', 'public');
+                }
             }
-    
-            if ($request->hasFile('voters_card')) {
-                $votersCard = $request->file('voters_card');
-                $votersCardPath = $votersCard->store('public/uploads');
-                $validated['voters_card'] = $votersCardPath;
-            }
-    
-            if ($request->hasFile('drivers_license')) {
-                $driversLicense = $request->file('drivers_license');
-                $driversLicensePath = $driversLicense->store('public/uploads');
-                $validated['drivers_license'] = $driversLicensePath;
-            }
-            
+
             $customer->update($validated);
             
             DB::commit();
