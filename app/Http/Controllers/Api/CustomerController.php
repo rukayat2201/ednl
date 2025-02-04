@@ -119,7 +119,7 @@ class CustomerController extends Controller
                 'bank_code' => 'required|string',
                 'accountnumber' => 'required|string|min:10,max:10',
                 'company_id' => 'required|string',
-                'email' => 'required|email|unique:customers,email,',
+                'email' => 'required|email|unique:customers,email,' . $customer_id,
                 'city' => 'required|string',
                 'country' => 'required|string',
                 'id_card' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -128,6 +128,24 @@ class CustomerController extends Controller
             ]);
             
             $customer = Customer::findOrFail($customer_id);
+
+            if ($request->hasFile('id_card')) {
+                $idCard = $request->file('id_card');
+                $idCardPath = $idCard->store('public/uploads');
+                $validated['id_card'] = $idCardPath;
+            }
+    
+            if ($request->hasFile('voters_card')) {
+                $votersCard = $request->file('voters_card');
+                $votersCardPath = $votersCard->store('public/uploads');
+                $validated['voters_card'] = $votersCardPath;
+            }
+    
+            if ($request->hasFile('drivers_license')) {
+                $driversLicense = $request->file('drivers_license');
+                $driversLicensePath = $driversLicense->store('public/uploads');
+                $validated['drivers_license'] = $driversLicensePath;
+            }
             
             $customer->update($validated);
             
