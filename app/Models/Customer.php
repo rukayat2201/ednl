@@ -26,5 +26,6 @@ class Customer extends Model
         'id_card',
         'voters_card',
         'drivers_license',
+        'status'
     ];
 }

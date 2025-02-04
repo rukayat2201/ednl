@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequest;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -133,9 +134,13 @@ class CustomerController extends Controller
             $files = ['id_card', 'voters_card', 'drivers_license'];
             foreach ($files as $file) {
                 if ($request->hasFile($file)) {
+                    if ($customer->$file) {
+                        Storage::disk('public')->delete($customer->$file);
+                    }
                     $validated[$file] = $request->file($file)->store('uploads', 'public');
                 }
             }
+    
 
             $customer->update($validated);
             
